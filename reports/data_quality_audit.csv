@@ -1,0 +1,31 @@
+table,check,count,note
+accounts,duplicate account_id,0,
+subscriptions,duplicate subscription_id,0,
+feature_usage,"duplicate usage_id (ID collision, content differs)",21,"flag, do not drop"
+support_tickets,duplicate ticket_id,0,
+churn_events,duplicate churn_event_id,0,
+subscriptions,orphan account_id,0,
+feature_usage,orphan subscription_id,0,
+support_tickets,orphan account_id,0,
+churn_events,orphan account_id,0,
+subscriptions,nulls in end_date,4514,
+support_tickets,nulls in satisfaction_score,825,
+churn_events,nulls in feedback_text,148,
+subscriptions,end_date < start_date,0,
+subscriptions,churn_flag True but end_date null,0,
+subscriptions,trial rows (mrr should be 0),778,
+subscriptions,non-trial rows with mrr == 0,0,
+subscriptions,arr_amount != 12 * mrr_amount,0,"mrr_amount is already monthly, even for annual billing"
+subscriptions,upgrade_flag AND downgrade_flag both True,23,
+subscriptions,rows overlapping another sub of same account,4370,decide subscription grain before summing MRR
+subscriptions,subscriptions still active at data end,4514,MRR snapshot will rise nearly monotonically
+subscriptions,start_date before account signup_date,0,
+subscriptions,sub plan_tier != accounts.plan_tier,3365,accounts.plan_tier = initial plan only
+accounts,accounts with churn_flag True,110,
+churn_events,distinct accounts with a churn event,352,
+churn_events,accounts with >1 churn event,175,
+accounts,churn_flag True but no churn event,35,
+accounts,churn event exists but churn_flag False,277,
+accounts,churn_flag True yet has an active subscription,110,
+feature_usage,usage_date before its subscription start_date,19142,
+support_tickets,closed_at < submitted_at,0,
