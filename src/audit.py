@@ -1,4 +1,4 @@
-"""Week 1 data-quality audit. Writes reports/data_quality_audit.csv.
+"""data-quality audit. Writes reports/data_quality_audit.csv.
 Run:  python src/audit.py
 Each check = (table, check, count, note). Document every finding and cleaning decision; do NOT silently drop rows.
 """
@@ -7,7 +7,33 @@ from config import REPORTS, DATA_END
 from load_data import load_all
 
 d = load_all()
-a, s, f, t, c = (d[k] for k in ["accounts", "subscriptions", "feature_usage", "support_tickets", "churn_events"])
+
+# Convert date columns into proper datetime format
+date_columns = {
+    "accounts": ["signup_date"],
+    "subscriptions": ["start_date", "end_date"],
+    "feature_usage": ["usage_date"],
+    "support_tickets": ["submitted_at", "closed_at"],
+    "churn_events": ["churn_date"]
+}
+
+for name, columns in date_columns.items():
+    for column in columns:
+        d[name][column] = pd.to_datetime(
+            d[name][column],
+            errors="coerce"
+        )
+
+# Assign datasets after date conversion
+a, s, f, t, c = (
+    d[k] for k in [
+        "accounts",
+        "subscriptions",
+        "feature_usage",
+        "support_tickets",
+        "churn_events"
+    ]
+)
 rows = []
 
 
@@ -43,11 +69,29 @@ add("subscriptions", "arr_amount != 12 * mrr_amount", (s.arr_amount != 12 * s.mr
     "mrr_amount is already monthly, even for annual billing")
 add("subscriptions", "upgrade_flag AND downgrade_flag both True", (s.upgrade_flag & s.downgrade_flag).sum())
 
+
+# Check subscription date overlaps within each account
 s2 = s.sort_values(["account_id", "start_date"]).copy()
-s2["end_f"] = s2.end_date.fillna(pd.Timestamp(DATA_END))
-s2["prev_end"] = s2.groupby("account_id").end_f.shift()
-add("subscriptions", "rows overlapping another sub of same account", (s2.start_date < s2.prev_end).sum(),
-    "decide subscription grain before summing MRR")
+
+# Treat missing end dates as active through the dataset end date
+s2["end_f"] = s2["end_date"].fillna(pd.Timestamp(DATA_END))
+
+# Find the maximum end date among all previous subscriptions
+s2["maximum_previous_end"] = (
+    s2.groupby("account_id")["end_f"]
+    .transform(lambda x: x.cummax().shift())
+)
+
+# Check whether the current subscription starts before the previous
+# subscription period has ended
+overlaps = s2["start_date"] < s2["maximum_previous_end"]
+
+add(
+    "subscriptions",
+    "rows overlapping another sub of same account",
+    overlaps.sum(),
+    "Investigate subscription grain and date boundary convention before summing MRR"
+)
 add("subscriptions", "subscriptions still active at data end", s.end_date.isna().sum(),
     "MRR snapshot will rise nearly monotonically")
 
