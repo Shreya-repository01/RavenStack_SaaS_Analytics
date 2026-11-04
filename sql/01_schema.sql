@@ -28,9 +28,17 @@ CREATE TABLE IF NOT EXISTS raven.churn_events (
   churn_date DATE, reason_code TEXT, refund_amount_usd NUMERIC, preceding_upgrade_flag BOOLEAN,
   preceding_downgrade_flag BOOLEAN, is_reactivation BOOLEAN, feedback_text TEXT);
 
--- Load (run from repo root in psql):
-\copy raven.accounts FROM 'data/raw/ravenstack_accounts.csv' CSV HEADER
-\copy raven.subscriptions FROM 'data/raw/ravenstack_subscriptions.csv' CSV HEADER
-\copy raven.feature_usage (usage_id,subscription_id,usage_date,feature_name,usage_count,usage_duration_secs,error_count,is_beta_feature) FROM 'data/raw/ravenstack_feature_usage.csv' CSV HEADER
-\copy raven.support_tickets FROM 'data/raw/ravenstack_support_tickets.csv' CSV HEADER
-\copy raven.churn_events FROM 'data/raw/ravenstack_churn_events.csv' CSV HEADER
+CREATE TABLE IF NOT EXISTS raven.monthly_subscription_snapshot (
+  subscription_id TEXT NOT NULL REFERENCES raven.subscriptions(subscription_id),
+  month_end DATE NOT NULL, account_id TEXT NOT NULL REFERENCES raven.accounts(account_id),
+  plan_tier TEXT, seats INT, billing_frequency TEXT, start_date DATE, end_date DATE,
+  is_trial BOOLEAN, is_active BOOLEAN NOT NULL, is_active_paid BOOLEAN NOT NULL,
+  is_new_subscription BOOLEAN NOT NULL, is_churned_subscription BOOLEAN NOT NULL,
+  mrr_snapshot NUMERIC NOT NULL, arr_snapshot NUMERIC NOT NULL,
+  PRIMARY KEY (subscription_id, month_end)
+);
+
+CREATE INDEX IF NOT EXISTS idx_monthly_snapshot_month_end
+  ON raven.monthly_subscription_snapshot(month_end);
+
+-- Load cleaned interim tables and the processed snapshot with sql/02_load_data.sql.
