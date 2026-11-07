@@ -19,11 +19,11 @@ Status legend: PROPOSED = mentor suggestion, needs team decision.
 
 ## Cleaning decisions log (append as you go)
 | Date | Table | Issue | Decision | Rows affected | Owner |
+
 |2026-11-06| monthly_subscription_snapshot| Duplicate subscription-month records| Checked using subscription_id + month_end; no duplicates found. No rows removed.| 0| BI Developer
 2026-11-06| monthly_subscription_snapshot| Snapshot validation| Validated 5,000 subscriptions across 24 months; snapshot contains 120,000 rows.| 120,000 validated| BI Developer
-2026-11-06| monthly_subscription_snapshot| June 2024 MRR validation| Confirmed June 2024 MRR of 3,833,405 matches raw data.| 0 mismatch| BI Developer
 2026-11-06| monthly_subscription_snapshot| New subscription KPI includes trials| Created a paid-only New Paid Subscriptions measure using is_trial = FALSE.| Not yet recorded| BI Developer|
-
+| 2026-11-08 | Measures | Paid-only new subscriptions | Created New Paid Subscriptions measure using is_new_subscription = TRUE and is_trial = FALSE. June 2024 result: 240. | BI Developer |
 ### Upgrade and downgrade flag conflict
 23 subscriptions have both upgrade and downgrade flags. These records are not automatically classified as upgrades or downgrades. The final treatment is pending confirmation from the KPI Analyst. No assumptions have been applied in the dashboard.
 ### Snapshot file location
