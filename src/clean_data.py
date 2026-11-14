@@ -148,6 +148,9 @@ def build_monthly_snapshot(subscriptions: pd.DataFrame) -> pd.DataFrame:
         panel["start_date"].gt(previous_month_end)
         & panel["start_date"].le(panel["month_end"])
     )
+    panel["is_new_paid_subscription"] = (
+        panel["is_new_subscription"] & ~panel["is_trial"].fillna(False)
+    )
     panel["is_churned_subscription"] = (
         panel["end_date"].notna()
         & panel["end_date"].gt(previous_month_end)
@@ -173,6 +176,7 @@ def build_monthly_snapshot(subscriptions: pd.DataFrame) -> pd.DataFrame:
         "is_active",
         "is_active_paid",
         "is_new_subscription",
+        "is_new_paid_subscription",
         "is_churned_subscription",
         "mrr_snapshot",
         "arr_snapshot",
