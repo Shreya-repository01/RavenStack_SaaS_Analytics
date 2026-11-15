@@ -33,10 +33,14 @@ CREATE TABLE IF NOT EXISTS raven.monthly_subscription_snapshot (
   month_end DATE NOT NULL, account_id TEXT NOT NULL REFERENCES raven.accounts(account_id),
   plan_tier TEXT, seats INT, billing_frequency TEXT, start_date DATE, end_date DATE,
   is_trial BOOLEAN, is_active BOOLEAN NOT NULL, is_active_paid BOOLEAN NOT NULL,
-  is_new_subscription BOOLEAN NOT NULL, is_churned_subscription BOOLEAN NOT NULL,
+  is_new_subscription BOOLEAN NOT NULL, is_new_paid_subscription BOOLEAN NOT NULL,
+  is_churned_subscription BOOLEAN NOT NULL,
   mrr_snapshot NUMERIC NOT NULL, arr_snapshot NUMERIC NOT NULL,
   PRIMARY KEY (subscription_id, month_end)
 );
+
+ALTER TABLE raven.monthly_subscription_snapshot
+  ADD COLUMN IF NOT EXISTS is_new_paid_subscription BOOLEAN;
 
 CREATE INDEX IF NOT EXISTS idx_monthly_snapshot_month_end
   ON raven.monthly_subscription_snapshot(month_end);

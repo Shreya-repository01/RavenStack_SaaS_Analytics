@@ -32,8 +32,10 @@ the transactional load replaces the project table contents on each run.
   no end date on or before that date.
 - Trials are retained in the panel but do not contribute to paid MRR or ARR.
 - Inactive and trial rows have `mrr_snapshot = 0` and `arr_snapshot = 0`.
-- `is_new_subscription` and `is_churned_subscription` indicate dates within the
-  month, using the preceding month-end as the lower exclusive boundary.
+- `is_new_subscription` includes every subscription starting in the month,
+  including trials; use `is_new_paid_subscription` for the paid-only count.
+  `is_churned_subscription` indicates an end date within the month, using the
+  preceding month-end as the lower exclusive boundary.
 - Source `mrr_amount` is already monthly. The `billing_frequency` field does not
   change the calculation.
 
@@ -42,4 +44,8 @@ the transactional load replaces the project table contents on each run.
 Account and subscription records overlap by design; subscription rows remain the
 revenue grain. The source has conflicting churn signals, 23 subscriptions with both
 upgrade and downgrade flags, and feature-use records preceding subscription starts.
-The model preserves these observations and does not fabricate reconciliation logic.
+Both movement flags are preserved on the cleaned subscription rows, but neither
+takes precedence; those 23 subscriptions are ambiguous for exclusive upgrade versus
+downgrade analyses. The flags are not included in the monthly snapshot and are not
+used to infer movement amounts. The model preserves these observations and does not
+fabricate reconciliation logic.

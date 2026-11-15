@@ -19,6 +19,6 @@ RESTART IDENTITY;
 \copy raven.feature_usage (usage_id,subscription_id,usage_date,feature_name,usage_count,usage_duration_secs,error_count,is_beta_feature) FROM 'data/interim/feature_usage_clean.csv' WITH (FORMAT csv, HEADER true, NULL '')
 \copy raven.support_tickets FROM 'data/interim/support_tickets_clean.csv' WITH (FORMAT csv, HEADER true, NULL '')
 \copy raven.churn_events FROM 'data/interim/churn_events_clean.csv' WITH (FORMAT csv, HEADER true, NULL '')
-\copy raven.monthly_subscription_snapshot FROM 'data/processed/monthly_subscription_snapshot.csv' WITH (FORMAT csv, HEADER true, NULL '')
+\copy raven.monthly_subscription_snapshot (subscription_id,month_end,account_id,plan_tier,seats,billing_frequency,start_date,end_date,is_trial,is_active,is_active_paid,is_new_subscription,is_new_paid_subscription,is_churned_subscription,mrr_snapshot,arr_snapshot) FROM 'data/processed/monthly_subscription_snapshot.csv' WITH (FORMAT csv, HEADER true, NULL '')
 
 COMMIT;

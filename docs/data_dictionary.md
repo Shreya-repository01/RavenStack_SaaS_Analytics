@@ -48,6 +48,7 @@ subscription-month.
 | `is_active` | boolean | True when `start_date <= month_end` and (`end_date` is null or `end_date > month_end`). |
 | `is_active_paid` | boolean | `is_active` and not a trial. |
 | `is_new_subscription` | boolean | Start date falls after the preceding month-end and on/before this month-end. |
+| `is_new_paid_subscription` | boolean | `is_new_subscription` and not a trial; use this for paid-only new-subscription KPIs. |
 | `is_churned_subscription` | boolean | Non-null end date falls after the preceding month-end and on/before this month-end. |
 | `mrr_snapshot` | numeric USD | Source MRR for active, paid subscriptions; zero otherwise. Never divide annual plans by 12 again. |
 | `arr_snapshot` | numeric USD | Source ARR for active, paid subscriptions; zero otherwise. |
