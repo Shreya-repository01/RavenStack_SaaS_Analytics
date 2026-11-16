@@ -1,0 +1,6 @@
+table,original_rows,cleaned_rows,original_nulls,cleaned_nulls,whitespace_changes,rows_removed,output_file
+accounts,500,500,0,0,0,0,accounts_cleaned.csv
+subscriptions,5000,5000,4514,4514,0,0,subscriptions_cleaned.csv
+feature_usage,25000,25000,0,0,0,0,feature_usage_cleaned.csv
+support_tickets,2000,2000,825,825,0,0,support_tickets_cleaned.csv
+churn_events,600,600,148,148,0,0,churn_events_cleaned.csv

@@ -31,6 +31,7 @@ python src/load_data.py        # sanity check: row counts
 python src/audit.py            # writes reports/data_quality_audit.csv
 python src/clean_data.py       # writes cleaned interim CSVs and monthly snapshot
 ```
+python src/monthly_kpis.py   # builds data/processed/monthly_kpis.csv
 PostgreSQL (optional but recommended): after generating the CSVs, run these from the
 repository root:
 ```bash
