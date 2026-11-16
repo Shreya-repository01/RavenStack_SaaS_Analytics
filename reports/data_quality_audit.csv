@@ -17,7 +17,7 @@ subscriptions,trial rows (mrr should be 0),778,
 subscriptions,non-trial rows with mrr == 0,0,
 subscriptions,arr_amount != 12 * mrr_amount,0,"mrr_amount is already monthly, even for annual billing"
 subscriptions,upgrade_flag AND downgrade_flag both True,23,
-subscriptions,rows overlapping another sub of same account,4370,decide subscription grain before summing MRR
+subscriptions,rows overlapping another sub of same account,4448,Investigate subscription grain and date boundary convention before summing MRR
 subscriptions,subscriptions still active at data end,4514,MRR snapshot will rise nearly monotonically
 subscriptions,start_date before account signup_date,0,
 subscriptions,sub plan_tier != accounts.plan_tier,3365,accounts.plan_tier = initial plan only

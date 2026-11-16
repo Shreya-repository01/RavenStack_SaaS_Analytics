@@ -15,5 +15,6 @@ data/processed/*
 !data/processed/.gitkeep
 !data/interim/*.csv
 !data/processed/monthly_subscription_snapshot.csv
+!data/processed/monthly_kpis.csv
 # Power BI temp files (keep the .pbix itself)
 *.pbi*.tmp
