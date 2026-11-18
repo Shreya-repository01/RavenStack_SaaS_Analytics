@@ -1,7 +1,6 @@
 # Metric Definitions and Business Rules
 
-**Project:** RavenStack SaaS Revenue & Subscription Analytics  
-**Status:** Final submission version  
+**Project:** RavenStack SaaS Revenue & Subscription Analytics   
 **Data period:** January 2023 – December 2024  
 **Snapshot end date:** 31 December 2024
 
